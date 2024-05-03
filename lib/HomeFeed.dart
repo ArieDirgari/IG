@@ -1,11 +1,13 @@
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:insta/CommentSheet.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class Post {
   final String username;
   final String avatar;
-  final String image;
+  final List<String> image;
   final String caption;
 
   Post({
@@ -19,9 +21,10 @@ class Post {
 //Post Widget
 
 class PostWidget extends StatefulWidget {
-  final Post post;
-  
+ 
 
+ 
+  final Post post;
   const PostWidget({Key? key, required this.post}) : super(key: key);
 
   @override
@@ -31,6 +34,9 @@ class PostWidget extends StatefulWidget {
 class _PostWidgetState extends State<PostWidget> {
   bool _isLiked = false;
   bool _isExpanded = false;
+
+  int _current = 0;
+  final CarouselController _controller = CarouselController();
 
   @override
   Widget build(BuildContext context) {
@@ -63,15 +69,25 @@ class _PostWidgetState extends State<PostWidget> {
             ],
           ),
           SizedBox(height: 8.0),
-          // Image
-          Image.asset(
-            widget.post.image,
-            height: 350,
-            width: double.infinity,
-            fit: BoxFit.fitHeight,
+          
+          CarouselSlider(
+            items: widget.post.image.map((img) {
+                  return Image.asset(img,
+                    width: double.infinity,
+                    fit: BoxFit.fill,
+                    );
+                  }).toList(),
+            options: CarouselOptions(
+                viewportFraction: 1.0,
+                height: 300,
+                enableInfiniteScroll: false,
+                onPageChanged: (index, reason) {
+                  setState(() {
+                    _current = index;
+                  });
+                }),
           ),
           SizedBox(height: 8.0),
-
           Padding(
               padding: EdgeInsets.symmetric(horizontal: 3.0),
               child: Row(
@@ -88,7 +104,8 @@ class _PostWidgetState extends State<PostWidget> {
                   ),
                   IconButton(
                       onPressed: () {}, icon: Icon(Icons.messenger_outline)),
-                  IconButton(onPressed: () {}, icon: Icon(Icons.send_outlined))
+                  IconButton(onPressed: () {}, icon: Icon(Icons.send_outlined)),
+                  
                 ],
               )),
           // Like Button
@@ -155,9 +172,24 @@ class _PostWidgetState extends State<PostWidget> {
   }
 }
 
+class MyWidget extends StatefulWidget {
+  const MyWidget({super.key});
+
+  @override
+  State<MyWidget> createState() => _MyWidgetState();
+}
+
+class _MyWidgetState extends State<MyWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
+  }
+}
+
+
 class PostFeed extends StatefulWidget {
   final List<Post> posts;
-
+  
   const PostFeed({Key? key, required this.posts}) : super(key: key);
 
   @override

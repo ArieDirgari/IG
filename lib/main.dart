@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:insta/Reels.dart';
 import 'package:insta/home.dart';
+
+
 // import 'package:insta/login.dart';
 
 void main() {
